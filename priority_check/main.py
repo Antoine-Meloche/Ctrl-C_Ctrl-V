@@ -41,9 +41,9 @@ def main():
     Pothole("Rue du Roussillon", 15835.160141739367, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
     Pothole("Rue du Roussillon", 25937.27854529452, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
     Pothole("Rue du Roussillon", 120979.37786848977, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 29136.329548451795, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
+    Pothole("Boulevard de Lucerne", 29136.329548451795, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
     Pothole("Rue de la Coopération", 18841.292545498713, -75.7400027777778, 45.4226527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 15835.160141739367, -75.7406833333333, 45.4243027777778, datetime.now()-timedelta(days=4)).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 105835.160141739367, -75.7406833333333, 45.4243027777778, datetime.now()-timedelta(days=1)).add_pothole_to_list()
     Pothole("Chemin d'Aylmer", 183937.27854529452, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
     Pothole("Rue du Roussillon", 120979.37786848977, -75.7406833333333, 45.4243027777778, datetime.now()-timedelta(days=7)).add_pothole_to_list()
     Pothole("Rue Victor-Beaudry", 29136.329548451795, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
@@ -121,10 +121,10 @@ def score(e):
             
 
             
-__H_SCALE__ = 2.1
-__T_SCALE__ = 1.2
-__T_CONST__ = 1
-__S_SCALE__ = 0.4
+__H_SCALE__ = 2.1 # exponent of the hierarchy factor
+__T_SCALE__ = 1.2 # exponent of the days passed factor
+__T_CONST__ = 1 # constant added to the days since
+__S_SCALE__ = 0.4 # exponent of the size factor
 
 def getScore(hierarchy: Hierarchy, days_discovered: float, size: float) -> float:
     return hierarchy.value**__H_SCALE__ * (days_discovered*(math.log10(size)/5)+__T_CONST__)**__T_SCALE__ * (size/1000)**(__S_SCALE__+(math.log10(size)/10))
