@@ -1,5 +1,6 @@
 import csv
-from datetime import date
+#import datetime
+from datetime import date, datetime
 from enum import Enum
 
 def main():
@@ -10,7 +11,6 @@ def main():
     """
     with open("VOIE_PUBLIQUE.csv", newline='', encoding="utf-8") as csvfile:
         typelist = []
-        potholelist = []
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in reader: 
             #print(row[17])
@@ -20,8 +20,12 @@ def main():
             
             #input()
             
-        print(typelist)
-    print(getHierarchyFromName("boulevard de la cité-des-jeunes"))
+        #print(typelist)
+
+
+    Pothole("Rue du Roussillon", 65178.743932303616, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
+    print(Pothole.potholelist)
+    #print(getHierarchyFromName("boulevard de la cité-des-jeunes"))
 
 
 
@@ -36,14 +40,52 @@ class Hierarchy(Enum):
     AUTOROUTE = 7
 
 class Pothole:
-    def __init__(self, hierarchy: Hierarchy, birthdate: date, street_name: str, size: float, long: float, lat: float):
-        self.hierarchy = hierarchy
-        self.birthdate = birthdate
+    
+    potholelist = []
+    
+    def __init__(self, street_name: str, size: float, long: float, lat: float):
+        self.hierarchy = getHierarchyFromName(street_name)
+        self.birthdate = datetime.now
         self.street_name = street_name
         self.size = size
         self.long = long
         self.lat = lat
+        self.score = 0
+    
+    def remove_pothole_from_list(self):
+        """_summary_
 
+        Args:
+            pothole_id (int): index of pothole
+        """
+        del Pothole.potholelist[Pothole.potholelist.index(self)]
+        
+    def add_pothole_to_list(self):
+        hierarchy = self.hierarchy
+        days_discovered = (datetime.now() - self.birthdate).total_seconds()/(3600*24)
+        self.score = getScore(hierarchy,days_discovered)
+        Pothole.potholelist.append(self)
+
+    def update_list(cls):
+        for pothole in Pothole.potholelist:
+            pothole.score = getScore(pothole.hierarchy, pothole.days_discovered)
+        Pothole.potholelist.sort(reverse=True, key=score)
+
+
+    def find_score(cls):
+        list_biggest_potholes = []
+        for pothole in Pothole.potholelist:
+            list_biggest_potholes.append(pothole)
+            if len(list_biggest_potholes) >= 60:
+                return list_biggest_potholes
+
+
+def score(e):
+    return e.score
+            
+            
+                
+            
 __H_SCALE__ = 2
 __T_SCALE__ = 1.2
 __T_CONST__ = 1
@@ -87,6 +129,7 @@ def size_value(size_pothole:float):
         return 3
     if size_pothole: # > medium_size:
         return 5
+
 
 if __name__ == "__main__":
     main()
