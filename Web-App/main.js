@@ -35,12 +35,14 @@ function readURL(input) {
     }
 }
 function getLocation() {
-    // if (navigator.geolocation) {
-    //   navigator.geolocation.getCurrentPosition(showPosition);
-    // } else {
-    //   x.innerHTML = "Geolocation is not supported by this browser.";
-    // }
-    sendRequest();
+    if(document.getElementById("select").files.length > 0){
+            navigator.geolocation.getCurrentPosition((position)=> {
+            const p=position.coords;
+            localStorage.setItem('lat', p.latitude);
+            localStorage.setItem('long', p.longitude);
+            sendRequest();
+        })
+    }
 }
 
 function checkForm(){
@@ -49,18 +51,15 @@ function checkForm(){
     }
 }
 
-function showPosition(position) {
-    localStorage.setItem('lat', position.coords.latitude);
-    localStorage.setItem('long', position.coords.longitude);
-
-    sendRequest();
-}
-
 function sendRequest() {
     const formData = new FormData();
     formData.append('file', document.getElementById("select").files[document.getElementById("select").files.length - 1]);
-    // formData.append('lat', localStorage.getItem("lat"));
-    // formData.append('lon', localStorage.getItem("long"));
+    formData.append('lat', localStorage.getItem("lat"));
+    formData.append('lon', localStorage.getItem("long"));
+    formData.append('nom', localStorage.getItem("nom"));
+    formData.append('prenom', localStorage.getItem("prenom"));
+    formData.append('courriel', localStorage.getItem("courriel"));
+    formData.append('description', localStorage.getItem("description"));
     
     try {
         fetch(window.origin+'/upload-file/', {
