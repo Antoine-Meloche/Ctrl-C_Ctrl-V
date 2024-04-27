@@ -71,7 +71,6 @@ def main():
     #print(getHierarchyFromName("boulevard de la cité-des-jeunes"))
 
 
-
 class Hierarchy(Enum):
     A_DETERMINER = 0
     AUTRE = 1
@@ -241,6 +240,116 @@ def create_url(coordinates):
         maps_url += str(location[1]) + ',' + str(location[0]) + '/'
     return maps_url.replace(' ', '%20')
     print(maps_url.replace(' ', '%20'))
+
+def distance_calculator(longitude1, latitude1,longitude2,latitude2):
+    """
+    R=radius of the earth
+    angle1 is the angle of the latitude of the first point in radiant
+    angle2 is the angle of the latitude of the second point in radiant
+    delta angle: is the angle of the difference between latitudes or longitude 
+    """
+    R=6371e3
+    angle1=latitude1*(numpy.pi/180)
+    angle2=latitude2*(numpy.pi/180)
+    delta_angle_long=(longitude1-longitude2)*(numpy.pi/180)
+    delta_angle_lat=(latitude1-latitude2)*(numpy.pi/180)
+    constant_a = numpy.sin(delta_angle_lat/2)*numpy.sin(delta_angle_lat/2) + numpy.cos(angle1)*numpy.cos(angle2)*numpy.sin(delta_angle_long)*numpy.sin(delta_angle_long)
+    constant_c = 2 * numpy.arctan2((numpy.sqrt(constant_a)),(numpy.sqrt(1-constant_a)))
+    constant_d = R*constant_c
+    return constant_d
+
+def create_link():
+    list_link=[]
+    list_potholes=Pothole.biggest_potholes()
+    list_link.append(list_potholes.pop(0))
+    target_lat=list_link[0].lat
+    target_long=list_link[0].long
+    default_lat=None
+    default_long=None
+    first_value=distance_calculator(target_long,target_lat,default_long,default_lat)
+    fictionnal_value=0
+    while fictionnal_value==0:
+        for pothole in list_potholes:
+            tester_lat=pothole.lat
+            tester_long=pothole.long
+            test_value=distance_calculator(target_long,target_lat,tester_long,tester_lat)
+            if test_value<first_value:
+                fictionnal_value=test_value
+            else:
+                continue
+        break
+    else:
+        while len(list_link) < 10:
+            for pothole in list_potholes:
+                tester_lat=pothole.lat
+                tester_long=pothole.long
+                test_value=distance_calculator(target_long,target_lat,tester_long,tester_lat)
+                if test_value<fictionnal_value:
+                    fictionnal_value=test_value
+                else:
+                    continue
+            else:
+                list_link.append(list_potholes.pop(pothole))
+        else:
+            return list_link
+        
+def three_point_checker(list_link):
+    #find potholes in a grid between point a and point b
+    #for potholes in potholes found check distances between two big potholes
+    #make a list of those that have only the smallest distance
+    #maybe had pathfinding with point base here to be discussed.
+    
+    active_index=0
+    for _ in range(9):
+        pothole1=list_link[active_index]
+        active_index +=1
+        pothole2=list_link[active_index]
+        possible_potholes=[]
+        lat1=pothole1.lat
+        long1=pothole2.long
+        lat2=pothole2.lat
+        long2=pothole2.long
+        for test_pothole in Pothole.potholelist:
+            if min(lat1,lat2)<test_pothole.lat<max(lat1,lat2) and min(long1,long2)<test_pothole.long<max(long1,long2):
+                possible_potholes.append(test_pothole)
+        list_true_subpotholes=[]
+        if len(possible_potholes)>4:
+            distance_filler=0
+            true_subpotholes=[]
+            while len(true_subpotholes) !=4:    
+                for pothole_variable in possible_potholes:
+                    sublat=pothole_variable.lat
+                    sublong=pothole_variable.long
+                    distance1=distance_calculator(long1,lat1,sublong,sublat)
+                    distance2=distance_calculator(sublong,sublat,long2,lat2)
+                    distance_total=distance1+distance2
+                    if distance_total< distance_filler or distance_filler==0:
+                        distance_filler=distance_total
+                    else:
+                        continue
+                else:
+                    true_subpotholes.append(distance_filler)
+            else:
+                list_true_subpotholes.append(true_subpotholes)
+        else:
+            list_true_subpotholes.append(possible_potholes)
+    else:
+        return list_true_subpotholes
+    
+
+def mixing_line(list_link,list_subpotholes):
+    
+    final_list=[]
+    for x in range(10):
+        final_list.append(list_link[x])
+        for m in len(list_subpotholes):
+            final_list.append(list_subpotholes[x][m])
+        else:
+            continue
+    else:
+        return final_list
+
+
 
 
 app = FastAPI()

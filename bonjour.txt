@@ -1,21 +1,21 @@
 PLAN D'EQUIPE COPY PASTE                                                
                                                                         
-               Camera AI pour trouver les trous/App mobile              
+               Camera AI pour trouver les trous/App mobile    ✔         
                                   |                                     
                                   V                                     
-      Utiliser les coordonnés de la camera pour trouver la location.    
+      Utiliser les coordonnés de la camera pour trouver la location.  ✔ 
                                   |                                     
                                   V                                     
-       Trouver le type de rue (artère, rue local, autoroute, etc...)    
+       Trouver le type de rue (artère, rue local, autoroute, etc...)  ✔ 
                                   |                                     
                                   V                                     
-             Calculer le chemin optimal (point de debut)                
+             Calculer le chemin optimal (point de debut)       …         
                                                                         
 ------------------------------------------------------------------------
-                    Utiliser machine automatique                        
+                    Utiliser machine automatique              ✘         
             Equipe externe (si il ya trop de nis de poule)              
          Reparation durans les heurs avec circulation minimal           
-                    Web app pour les utilisateurs                       
+                    Web app pour les utilisateurs              ✔        
 ------------------------------------------------------------------------
 
 ROLES:
@@ -23,3 +23,6 @@ Adem et Mylène: App Web
 Antoine: AI de photo
 Jayden: Medic
 William: Algorithm de priorité
+
+… = in progress
+✔ = finished
