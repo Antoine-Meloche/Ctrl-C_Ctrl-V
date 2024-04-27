@@ -2,6 +2,7 @@ import csv
 #import datetime
 from datetime import date, datetime, timedelta
 from enum import Enum
+import numpy
 import math
 import exiftool
 from ultralytics import YOLO
@@ -169,16 +170,77 @@ def getHierarchyFromName(name: str):
     return "Not Found"
 
 
-def size_value(size_pothole:float):
-    small_size=22500 #15cm **2
-    medium_size=90000 #30 cm **2
-    max_size =25000000 
-    if size_pothole <= small_size:
-        return 1
-    if medium_size >= size_pothole: # > small_size:
-        return 3
-    if size_pothole: # > medium_size:
-        return 5
+class Worker():
+    costperkm = 10 # cost per kilometer traveled
+    rewardperpothole = 5 # base reward per pothole
+    addedrewardperscore = 0.01 # added reward per pothole score
+    potholeproxbonusperkm = 0.01 # bonus per 100/(km+1) distance with other potholes
+    def __init__(self, long: float, lat: float):
+        self.long = long
+        self.lat = lat
+        self.path = []
+
+def distance_calculator(longitude1, latitude1, longitude2, latitude2):
+    """
+    R=radius of the earth
+    angle1 is the angle of the latitude of the first point in radiant
+    angle2 is the angle of the latitude of the second point in radiant
+    delta angle: is the angle of the difference between latitudes or longitude 
+    returns in km
+    """
+    R=6371e3
+    angle1=latitude1*(numpy.pi/180)
+    angle2=latitude2*(numpy.pi/180)
+    delta_angle_long=(longitude1-longitude2)*(numpy.pi/180)
+    delta_angle_lat=(latitude1-latitude2)*(numpy.pi/180)
+    constant_a = numpy.sin(delta_angle_lat/2)*numpy.sin(delta_angle_lat/2) + numpy.cos(angle1)*numpy.cos(angle2)*numpy.sin(delta_angle_long)*numpy.sin(delta_angle_long)
+    constant_c = 2 * numpy.arctan2((numpy.sqrt(constant_a)),(numpy.sqrt(1-constant_a)))
+    constant_d = R*constant_c
+    return constant_d/1000
+
+def pathfind(workers: list):
+    workercount = len(workers)
+    phlist = Pothole.potholelist.copy()
+    iterationcount = 0
+    while iterationcount < 20:
+        for worker in workers:
+            if len(phlist) == 0:
+                return
+            besthole = Pothole("?", 0, 0, 0)
+            bestscore = 0
+            for pothole in phlist:
+                score = pf_calc_reward(pothole, phlist, worker) - pf_calc_cost(pothole, worker)
+                if score > bestscore:
+                    print(pothole)
+                    besthole = pothole
+                    bestscore = score
+            worker.path.append(besthole)
+            worker.long = besthole.long
+            worker.lat = besthole.lat
+            phlist.remove(besthole)
+        iterationcount += 1
+
+
+
+def pf_calc_reward(tpothole: Pothole, potholelist: list, worker: Worker):
+    reward = Worker.rewardperpothole + tpothole.score * Worker.addedrewardperscore
+    for pothole in potholelist:
+        if pothole is tpothole:
+            continue
+        reward += (100 / (distance_calculator(worker.long, worker.lat, pothole.long, pothole.lat) + 1)) * Worker.potholeproxbonusperkm
+    return reward
+
+def pf_calc_cost(tpothole: Pothole, worker: Worker):
+    cost = distance_calculator(worker.long, worker.lat, tpothole.long, tpothole.lat) * Worker.costperkm
+    return cost
+
+
+def create_url(coordinates):
+    maps_url = 'https://www.google.com/maps/dir/'
+    for location in coordinates:
+        maps_url += str(location[1]) + ',' + str(location[0]) + '/'
+    return maps_url.replace(' ', '%20')
+    print(maps_url.replace(' ', '%20'))
 
 
 app = FastAPI()
@@ -225,6 +287,24 @@ async def result(file: UploadFile = File(...)):
             content={'message': str(e)}
         )
     
+@app.get("/pathfind/{count}")
+async def pathfind_count(count):
+    workers = []
+    startcoords = [-75.73872064226423, 45.42243891830577]
+    for i in range(0,int(count)):
+        workers.append(Worker(startcoords[0], startcoords[1]))
+    pathfind(workers)
+    result = ""
+    for worker in workers:
+        pathcoords = [startcoords]
+        for pothole in worker.path:
+            pathcoords.append([pothole.long, pothole.lat])
+        result += create_url(pathcoords) + "\n"
+    print(result)
+    return result
+    return f"{[(str(worker.path) + ', ') for worker in workers]}"
+
+
 @app.get("/get-holes/")
 async def get_holes():
     return Pothole.potholelist
@@ -245,10 +325,12 @@ async def shutdown():
 async def startup():
     try:
         with open('pothole.pickle', 'rb') as file: 
-            if(file):
-                Pothole.potholelist = pickle.load(file)
+            Pothole.potholelist = pickle.load(file)
         Pothole.update_list()
     except:
+        pass
+    for pothole in Pothole.potholelist:
+        #print(pothole)
         pass
     #main()
     pass
