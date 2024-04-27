@@ -3,6 +3,16 @@ import csv
 from datetime import date, datetime, timedelta
 from enum import Enum
 import math
+import exiftool
+from ultralytics import YOLO
+import requests
+from fastapi import FastAPI, UploadFile, File, status
+from fastapi.responses import JSONResponse
+import aiofiles
+import os
+import random
+import string
+import pickle
 
 def main():
     """
@@ -55,6 +65,8 @@ def main():
     print("Potholes:")
     for pothole in Pothole.potholelist:
         print(pothole)
+
+    Pothole("Rue Émile-Ducharme", 275487.25465427524, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
     #print(getHierarchyFromName("boulevard de la cité-des-jeunes"))
 
 
@@ -73,9 +85,12 @@ class Pothole:
     
     potholelist = []
     
-    def __init__(self, street_name: str, size: float, long: float, lat: float, birthdate: datetime = datetime.now()):
+    def __init__(self, street_name: str, size: float, long: float, lat: float, birthdate: datetime = 0):
         self.hierarchy = getHierarchyFromName(street_name)
-        self.birthdate = birthdate
+        if (birthdate == 0):
+            self.birthdate = datetime.now()
+        else:
+            self.birthdate = birthdate
         self.street_name = street_name
         self.size = size
         self.long = long
@@ -166,5 +181,136 @@ def size_value(size_pothole:float):
         return 5
 
 
+app = FastAPI()
+
+@app.post("/upload-file/")
+async def result(file: UploadFile = File(...)):
+    try:
+        extension = file.filename.split(".")[-1]
+        if extension not in ["png", "jpg", "bmp", "jpeg"]:
+             extension = "jpg"
+
+        # Define a temporary file path
+        temp_file_path = f"/tmp-img.{extension}"
+        
+        # Save the file temporarily
+        async with aiofiles.open(temp_file_path, 'wb') as out_file:
+            content = await file.read() # async read
+            await out_file.write(content) # async write
+        
+        # Process the file
+        nid_de_poule = process_image(temp_file_path)
+        
+        # Delete the temporary file
+        os.remove(temp_file_path)
+
+        if nid_de_poule == None:
+             return JSONResponse(
+                  status_code=status.HTTP_200_OK,
+                  content={"result": 'none'}
+             )
+        
+        Pothole(nid_de_poule["rue"], nid_de_poule["width"]*nid_de_poule["height"], nid_de_poule["lon"], nid_de_poule["lat"]).add_pothole_to_list()
+        
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                 "result": 'success',
+                 "pothole": nid_de_poule
+                 }
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={'message': str(e)}
+        )
+    
+@app.get("/get-holes/")
+async def get_holes():
+    return Pothole.potholelist
+
+@app.get("/update-holes/")
+async def update_holes():
+    Pothole.update_list()
+    return Pothole.potholelist
+
+@app.on_event('shutdown')
+async def shutdown():
+    with open('pothole.pickle', 'wb') as file: 
+        pickle.dump(Pothole.potholelist, file)
+    
+    pass
+
+@app.on_event("startup")
+async def startup():
+    try:
+        with open('pothole.pickle', 'rb') as file: 
+            if(file):
+                Pothole.potholelist = pickle.load(file)
+        Pothole.update_list()
+    except:
+        pass
+    #main()
+    pass
+
+def find_size(cam_distance, pixels, focal_length):
+	return pixels * cam_distance / focal_length
+
+def generate_random_string(length):
+    # Get all the ASCII letters in lowercase and uppercase
+    letters = string.ascii_letters
+    # Randomly choose characters from letters for the given length of the string
+    random_string = ''.join(random.choice(letters) for i in range(length))
+    return random_string
+
+
+def process_image(image_path):
+
+    model = YOLO("model.pt")
+    results = model(image_path)
+    results[0].save(f"detected/{generate_random_string(10)}.png")
+    try:
+        x, y, w, h = results[0].boxes.xywh.numpy()[0]
+    except IndexError:
+         print("Aucun nid de poule trouvé.")
+         return None
+
+    with exiftool.ExifToolHelper() as et:
+        metadata = et.get_metadata(image_path)
+
+        print(metadata[0])
+        
+        focal_length = metadata[0]['EXIF:FocalLength']
+        subject_distance = metadata[0]['EXIF:SubjectDistance']
+        lat_ref = metadata[0]['EXIF:GPSLatitudeRef']
+        latitude = metadata[0]['EXIF:GPSLatitude']
+        lon_ref = metadata[0]['EXIF:GPSLongitudeRef']
+        longitude = metadata[0]['EXIF:GPSLongitude']
+
+        # print(metadata[0])
+
+        real_lat = (-1 if lat_ref == 'S' else 1) * latitude
+        real_lon = (-1 if lon_ref == 'W' else 1) * longitude
+        width = find_size(subject_distance, w, focal_length)
+        height = find_size(subject_distance, h, focal_length)
+
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={real_lat}&lon={real_lon}&format=json"
+
+    rue = requests.get(url).json()["address"]["road"]
+
+    return {
+         "rue": rue,
+         "lat": real_lat,
+         "lon": real_lon,
+         "width": width,
+         "height": height
+    }
+
+#process_image("img-22.jpg")
+
+import uvicorn
+
 if __name__ == "__main__":
-    main()
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info")
+
+#main()
