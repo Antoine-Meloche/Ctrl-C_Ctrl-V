@@ -1,0 +1,33 @@
+#body {
+    color:white;
+    background-color: #00538e;
+    font-size:48;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.center {
+    text-align: center;
+    display:grid;
+    height: 100vh;
+    place-items: center;
+}
+#go, #submit{
+    background-color: #006EBD;
+    border: #00A2E8 solid 3px;
+    text-decoration: none;
+    width:200px;
+    border-radius: 12em;
+    color: white;
+    display: block;
+    font-size:16px;
+    padding: 2em 5em;
+    margin:2em auto;
+}
+#go:hover,.submit:hover{
+    background-color: #008FDF;
+}
+.submit{
+    width: 300px;
+}
+h1{
+    margin-bottom:2em;
+}
