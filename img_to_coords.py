@@ -2,8 +2,11 @@ import exiftool
 from ultralytics import YOLO
 import requests
 
-# model = YOLO("model.pt")
-# results = model("img-1.jpg")
+model = YOLO("model.pt")
+# for i in range(1, 7):
+#     results = model(f"img-{i}.jpg")
+
+#     print(results)
 
 def find_size(cam_distance, pixels, focal_length):
 	return pixels * cam_distance / focal_length
