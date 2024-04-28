@@ -493,7 +493,7 @@ async def pathfind_count(count):
     html = '<body style="background: #00538e;"><ol style="margin-top: 2rem; display: flex; flex-direction: column; gap: 2rem; justify-content-center; align-items: center">'
 
     for i, res in enumerate(result.split("\n")[:-1]):
-        html += f'<li style="color: white; font-size: 1.5rem; font-weight: bold; font-family: Helvetica, Arial, sans-serif"><a href="{res}" style="color: white;">Équipe {i}</a></li>'
+        html += f'<li style="color: white; font-size: 1.5rem; font-weight: bold; font-family: Helvetica, Arial, sans-serif"><a href="{res}" style="color: white;">Équipe {i+1}</a></li>'
 
     html += "</ol>"
     return HTMLResponse(html)
