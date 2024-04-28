@@ -27,6 +27,7 @@ import folium
 from folium import IFrame
 from folium.plugins import HeatMap
 import copy
+import branca.colormap as cm
 
 def main():
     """
@@ -408,6 +409,12 @@ async def get_map():
 
     points = []
 
+    ev = folium.FeatureGroup(name="Priorité élevé", show=False).add_to(m)
+    mo = folium.FeatureGroup(name="Priorité moyenne", show=False).add_to(m)
+    ba = folium.FeatureGroup(name="Priorité basse", show=False).add_to(m)
+
+    hml = folium.FeatureGroup(name="HeatMap", show=True).add_to(m)
+
     # Add markers for each pothole
     for pothole in potholelist:
         # Create a popup with the coordinates
@@ -418,15 +425,20 @@ async def get_map():
 
         if int(pothole.hierarchy) >= 5 or pothole.score >= 5000:
             color = "red"
+            layer = ev
         elif int(pothole.hierarchy) >= 3 or pothole.score >= 2000:
             color = "orange"
+            layer = mo
         else:
             color = "blue"
-        folium.Marker([pothole.lat, pothole.long], popup=popup, icon=folium.Icon(color=color)).add_to(m)
+            layer = ba
+        folium.Marker([pothole.lat, pothole.long], popup=popup, icon=folium.Icon(color=color)).add_to(layer)
 
         points.append([pothole.lat, pothole.long])
     
-    HeatMap(points).add_to(m)
+    HeatMap(points).add_to(hml)
+
+    folium.LayerControl().add_to(m)
 
     map_html = m._repr_html_()
 
