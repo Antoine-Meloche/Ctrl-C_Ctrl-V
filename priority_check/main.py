@@ -38,14 +38,12 @@ def main():
         typelist = []
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in reader: 
-            #print(row[17])
             if row[17] not in typelist:
                 typelist.append(row[17])
                 
             
             #input()
             
-        #print(typelist)
 
 
     Pothole("Rue de la Coopération", 27337.65215505029, -75.7398916666667, 45.421775).add_pothole_to_list()
@@ -72,16 +70,8 @@ def main():
     Pothole("Rue du Roussillon", 120979.37786848977, -75.7406833333333, 45.4243027777778, datetime.now()-timedelta(days=7)).add_pothole_to_list()
     Pothole("Rue Victor-Beaudry", 29136.329548451795, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
     Pothole("Rue de la Coopération", 18841.292545498713, -75.7400027777778, 45.4226527777778, datetime.now()-timedelta(days=31)).add_pothole_to_list()
-    print("Potholes:")
-    for pothole in Pothole.potholelist:
-        print(pothole)
-    Pothole.update_list()
-    print("Potholes:")
-    for pothole in Pothole.potholelist:
-        print(pothole)
 
     Pothole("Rue Émile-Ducharme", 275487.25465427524, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    #print(getHierarchyFromName("boulevard de la cité-des-jeunes"))
 
 
 class Hierarchy(Enum):
@@ -225,7 +215,6 @@ def pathfind(workers: list):
                 if score > bestscore:
                     besthole = pothole
                     bestscore = score
-            print(besthole)
             worker.path.append(besthole)
             worker.long = besthole.long
             worker.lat = besthole.lat
@@ -252,7 +241,6 @@ def create_url(coordinates):
     for location in coordinates:
         maps_url += str(location[1]) + ',' + str(location[0]) + '/'
     return maps_url.replace(' ', '%20')
-    print(maps_url.replace(' ', '%20'))
 
 def create_link():
     list_link=[]
@@ -508,7 +496,6 @@ async def pathfind_count(count):
         for pothole in worker.path:
             pathcoords.append([pothole.long, pothole.lat])
         result += create_url(pathcoords) + "\n"
-    #print(result)
     #return result
     returned = {}
 
@@ -543,7 +530,6 @@ async def startup():
     except:
         pass
     for pothole in Pothole.potholelist:
-        #print(pothole)
         pass
     #main()
     pass
@@ -561,9 +547,7 @@ def generate_random_string(length):
 
 def process_image(image_path):
 
-    print("hello")
     model = YOLO("model.pt")
-    print("hello")
     results = model(image_path)
     try:
         _, _, w, h = results[0].boxes.xywh.numpy()[0]
