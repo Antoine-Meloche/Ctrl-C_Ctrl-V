@@ -1,12 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Raport d'un nix de poule</title>
+        <title>Rapport d'un nid de poule</title>
+        <!-- External CSS -->
         <link rel="stylesheet" href="style.css">
-
-        <!--Bootstrap imports-->
+        <!-- Bootstrap imports -->
         <link rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link
@@ -14,21 +14,16 @@
             rel="stylesheet"
             integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
             crossorigin="anonymous">
+        <!-- jQuery UI CSS -->
         <link
-            class="jsbin"
             href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css"
-            rel="stylesheet"
-            type="text/css" />
-        <script
-            class="jsbin"
-            src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script
-            class="jsbin"
-            src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+            rel="stylesheet" type="text/css" />
     </head>
+
     <body id="body" onload="checkForm()">
-        <!--Centrer tous les elements-->
+        <!-- Center all elements -->
         <div>
+            <!-- Top section with information -->
             <div class="text-center p-3" id="tops">
                 <h1 class>Information de connexion</h1>
                 <h3 class="fs-6 fw-normal">
@@ -36,7 +31,9 @@
                     suite pour identifier vos signalement.
                 </h3>
             </div>
+            <!-- Form section -->
             <form action method="post" class="m-3" novalidate>
+                <!-- Input fields -->
                 <div class="row g-3 p-3 ">
                     <div class="col-3">
                         <label for="prenom"
@@ -68,20 +65,26 @@
                             required>
                     </div>
                 </div>
-            
+
+                <!-- Submit button -->
                 <div class="submits">
-                    <button id="submiter" type="submit"
-                        class="btn btn-primary mb-3">Se connecter</button>
+                    <button id="submiter" type="submit">Se connecter</button>
                 </div>
-
             </form>
-
         </div>
-        <!--Script Bootstrap-->
+
+        <!-- Bootstrap JS bundle -->
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
-        <script src="main.js"></script>
+        <!-- jQuery -->
+        <script
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <!-- jQuery UI -->
+        <script
+            src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+        <!-- Custom JavaScript -->
+        <script type="text/javascript" src="main.js"></script>
     </body>
 </html>
