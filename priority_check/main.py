@@ -84,6 +84,9 @@ class Hierarchy(Enum):
     ART_PRIM = 6
     AUTOROUTE = 7
 
+    def __int__(self):
+        return self.value
+
 class Pothole:
     
     potholelist = []
@@ -341,41 +344,27 @@ app = FastAPI()
 @app.get("/map", response_class=HTMLResponse)
 async def get_map():
     Pothole("Rue de la Coopération", 133729.1393928651, -75.7396333333333, 45.4220305555556).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 19014.35597710116, -75.7396333333333, 45.4220305555556).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 384329.6356625774, -75.7396333333333, 45.4220305555556).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 7544.485864571072, -75.7396333333333, 45.4220305555556).add_pothole_to_list()
     Pothole("Rue de la Coopération", 27337.65215505029, -75.7398916666667, 45.421775).add_pothole_to_list()
     Pothole("Rue de la Coopération", 46764.74977358413, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 45392.76963265286, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 82539.61783350975, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 8178.726142000768, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 4939.061254910656, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 3738.7151497133636, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 1153583.3721435706, -75.7411416666667, 45.4219527777778).add_pothole_to_list()
     Pothole("Rue du Roussillon", 69567.92688925816, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 370368.8547083, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 4867.301275874248, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 65178.743932303616, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 100729.14818992285, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 15835.160141739367, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 25937.27854529452, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 120979.37786848977, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue du Roussillon", 29136.329548451795, -75.7406833333333, 45.4243027777778).add_pothole_to_list()
-    Pothole("Rue de la Coopération", 18841.292545498713, -75.7400027777778, 45.4226527777778).add_pothole_to_list()
+    Pothole("Rue du Roussillon", 69567.92688925816, -75.7406433333333, 45.4244027777778).add_pothole_to_list()
+    Pothole("Rue du Roussillon", 69567.92688925816, -75.7406433333333, 45.4244527777778).add_pothole_to_list()
     Pothole("Rue de la Coopération", 7621.30828996196, -75.7384194444444, 45.4213666666667).add_pothole_to_list()
     Pothole("Rue de la Coopération", 29282.127129492255, -75.7384694444444, 45.4213861111111).add_pothole_to_list()
     Pothole("Boulevard Alexandre-Taché", 13623.072365609714, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 23390.422973778757, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 13502.876965794452, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 15643.786267025705, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 18133.508170100573, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 39539.770553990886, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 44026.590217581426, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 30159.56631893379, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
-    Pothole("Boulevard Alexandre-Taché", 16071.74704564928, -75.7397055555556, 45.4214527777778).add_pothole_to_list()
     Pothole("Rue Prévost", 27552.365699378373, -75.7427361111111, 45.4201555555556).add_pothole_to_list()
-    Pothole("Rue Prévost", 81520.7220137589, -75.7427361111111, 45.4201555555556).add_pothole_to_list()
-    Pothole("Rue Prévost", 31795.482396877516, -75.7427361111111, 45.4201555555556).add_pothole_to_list()
+    Pothole("Rue De Lanaudière", 38858.87203836116, -75.7420666666667, 45.4217222222222).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 108147.5460474656, -75.7435611111111, 45.4215777777778).add_pothole_to_list()
+    Pothole("Rue Bégin", 189823.85836376474, -75.7451194444444, 45.4211638888889).add_pothole_to_list()
+    Pothole("Rue De Lanaudière", 138333.08838284417, -75.7454944444444, 45.4210444444444).add_pothole_to_list()
+    Pothole("Rue De Lanaudière", 284253.8839207603, -75.7469111111111, 45.4207305555556).add_pothole_to_list()
+    Pothole("Rue De Lanaudière", 3189.523189019443, -75.7476277777778, 45.4206361111111).add_pothole_to_list()
+    Pothole("Boulevard de Lucerne", 119594.78630721348, -75.7483138888889, 45.4202777777778).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 208421.4357619359, -75.7473027777778, 45.4213083333333).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 289894.0662426106, -75.746225, 45.4219194444444).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 271859.22741997556, -75.7436722222222, 45.4221611111111).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 47349.756393001444, -75.7417666666667, 45.4225194444444).add_pothole_to_list()
+    Pothole("Boulevard Alexandre-Taché", 96168.89822161163, -75.7403166666667, 45.4230166666667).add_pothole_to_list()
 
     potholelist = Pothole.potholelist
 
@@ -427,9 +416,13 @@ async def get_map():
         iframe = IFrame(html, width=300, height=200)
         popup = folium.Popup(iframe, max_width=2650)
 
-        # popup_text = f"Latitude: {pothole.lat}, Longitude: {pothole.long}"
-        # popup = folium.Popup(popup_text, max_width=250)
-        folium.Marker([pothole.lat, pothole.long], popup=popup).add_to(m)
+        if int(pothole.hierarchy) >= 5 or pothole.score >= 5000:
+            color = "red"
+        elif int(pothole.hierarchy) >= 3 or pothole.score >= 2000:
+            color = "orange"
+        else:
+            color = "blue"
+        folium.Marker([pothole.lat, pothole.long], popup=popup, icon=folium.Icon(color=color)).add_to(m)
 
         points.append([pothole.lat, pothole.long])
     
