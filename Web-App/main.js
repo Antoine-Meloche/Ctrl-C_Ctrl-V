@@ -105,6 +105,8 @@ function sendRequest() {
     formData.append('courriel', localStorage.getItem("courriel"));
     formData.append('description', localStorage.getItem("description"));
 
+    console.log(formData);
+
     // Send data
     try {
         fetch(window.origin + '/upload-file/', {

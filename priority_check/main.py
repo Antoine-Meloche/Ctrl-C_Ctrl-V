@@ -452,7 +452,7 @@ async def get_map():
     return map_html
 
 @app.post("/upload-file/")
-async def result(file: UploadFile = File(...), lat = ""):
+async def result(file: UploadFile = File(...)):
     try:
         extension = file.filename.split(".")[-1]
         if extension not in ["png", "jpg", "bmp", "jpeg"]:
@@ -466,6 +466,7 @@ async def result(file: UploadFile = File(...), lat = ""):
         async with aiofiles.open(temp_file_path, 'wb') as out_file:
             content = await file.read() # async read
             await out_file.write(content) # async write
+
         
         # Process the file
         nid_de_poule = process_image(temp_file_path)
@@ -507,8 +508,13 @@ async def pathfind_count(count):
         for pothole in worker.path:
             pathcoords.append([pothole.long, pothole.lat])
         result += create_url(pathcoords) + "\n"
-    print(result)
-    return result
+    #print(result)
+    #return result
+    returned = {}
+
+    for i, res in enumerate(result.split("\n")):
+        returned[i] = res
+    return returned
     return f"{[(str(worker.path) + ', ') for worker in workers]}"
 
 
@@ -555,7 +561,9 @@ def generate_random_string(length):
 
 def process_image(image_path):
 
+    print("hello")
     model = YOLO("model.pt")
+    print("hello")
     results = model(image_path)
     try:
         _, _, w, h = results[0].boxes.xywh.numpy()[0]
@@ -591,7 +599,7 @@ def process_image(image_path):
          "height": height
     }
 
-app.mount("/", StaticFiles(directory="./Web-App"), name="web-app")
+app.mount("/", StaticFiles(directory="../Web-App"), name="web-app")
 
 
 import uvicorn
