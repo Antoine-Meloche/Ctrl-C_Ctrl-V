@@ -1,11 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Raport d'un nix de poule</title>
+		<title>Rapport d'un nid de poule</title>
+		<!-- External CSS -->
 		<link rel="stylesheet" href="style.css">
-		<!--Bootstrap imports-->
+		<!-- Bootstrap imports -->
 		<link rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<link
@@ -13,26 +14,41 @@
 			rel="stylesheet"
 			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 			crossorigin="anonymous">
+		<!-- jQuery UI CSS -->
+		<link class="jsbin"
+			href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css"
+			rel="stylesheet" type="text/css" />
 	</head>
+
 	<body id="body">
-		<!--Centrer tous les elements-->
+		<!-- Center all elements -->
 		<div class="center">
-			<!--Lien à la page de la camera (avec icone)-->
+			<!-- Link to the camera page (with icon) -->
 			<a class="back" href="./camera.html">
-				<div class="bi bi-arrow-left-square-fill">
-					</span width="32" height="32">Retour
-				</div></a>
-			<!--Contenu principal-->
+				<div class="bi bi-arrow-left-square-fill" width="32" height="32">
+					Retour
+				</div>
+			</a>
+			<!-- Main content -->
 			<div>
 				<p class="fs-1 titre">Ajouter une Description</p>
 				<textarea name id cols="50" rows="10"></textarea>
-				<a class="submit" href="./camera.html">Soumettre</a>
+				<button class="submit" id="submiters" onclick="idgaf()">Soumettre</button>
 			</div>
 		</div>
-		<!--Script Bootstrap-->
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-			crossorigin="anonymous"></script>
+
+		<!-- Bootstrap JS bundle -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+        <!-- jQuery -->
+        <script
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <!-- jQuery UI -->
+        <script
+            src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+        <!-- Custom JavaScript -->
+        <script type="text/javascript" src="main.js"></script>
 	</body>
 </html>
