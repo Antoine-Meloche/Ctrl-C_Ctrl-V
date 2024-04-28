@@ -489,13 +489,14 @@ async def pathfind_count(count):
         for pothole in worker.path:
             pathcoords.append([pothole.long, pothole.lat])
         result += create_url(pathcoords) + "\n"
-    #return result
-    returned = {}
 
-    for i, res in enumerate(result.split("\n")):
-        returned[i] = res
-    return returned
-    return f"{[(str(worker.path) + ', ') for worker in workers]}"
+    html = '<body style="background: #00538e;"><ol style="margin-top: 2rem; display: flex; flex-direction: column; gap: 2rem; justify-content-center; align-items: center">'
+
+    for i, res in enumerate(result.split("\n")[:-1]):
+        html += f'<li style="color: white; font-size: 1.5rem; font-weight: bold; font-family: Helvetica, Arial, sans-serif"><a href="{res}" style="color: white;">Équipe {i}</a></li>'
+
+    html += "</ol>"
+    return HTMLResponse(html)
 
 
 @app.get("/get-holes/")
