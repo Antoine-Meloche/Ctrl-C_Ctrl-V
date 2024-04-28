@@ -9,12 +9,12 @@ PLAN D'EQUIPE COPY PASTE
        Trouver le type de rue (artère, rue local, autoroute, etc...)  ✔ 
                                   |                                     
                                   V                                     
-             Calculer le chemin optimal (point de debut)       …         
+             Calculer le chemin optimal (point de debut)       ✔         
                                                                         
 ------------------------------------------------------------------------
                     Utiliser machine automatique              ✘         
-            Equipe externe (si il ya trop de nis de poule)              
-         Reparation durans les heurs avec circulation minimal           
+            Equipe externe (si il ya trop de nis de poule)     …        
+         Reparation durans les heurs avec circulation minimal  ✘        
                     Web app pour les utilisateurs              ✔        
 ------------------------------------------------------------------------
 
